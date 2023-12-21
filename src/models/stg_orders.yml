@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: stg_orders
+    columns:
+      - name: order_id
+        data_type: INT64
+        tests:
+          - not_null
+          - unique
+        description: Unique identifier for each order.
+      - name: customer_id
+        data_type: INT64
+        tests:
+          - not_null
+        description: Associates each order with a specific customer.
+      - name: order_date
+        data_type: DATE
+        tests:
+          - not_null
+        description: Specifies date when the order was placed.
+      - name: status
+        data_type: STRING
+        tests:
+          - accepted_values:
+              values:
+                - placed
+                - shipped
+                - completed
+                - return_pending
+                - returned
+          - not_null
+        description: The order lifecycle stage.
+    config:
+      tags:
+        - eCommerce
+    description: This table returns the order data with annotated column names. Issues with missing relationship test for customers.
+    meta:
+      asset_status: issue
+      tier: tier 1

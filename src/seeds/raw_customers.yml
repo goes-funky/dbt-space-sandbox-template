@@ -1,0 +1,38 @@
+version: 2
+
+seeds:
+  - name: raw_customers
+    config:
+      column_types:
+        first_name: STRING
+        last_name: STRING
+        id: INT
+      tags:
+        - customer
+    columns:
+      - name: id
+        data_type: INT64
+        tests:
+          - unique
+          - not_null
+        description: Unique identifier for each customer.
+      - name: first_name
+        data_type: STRING
+        tags:
+          - PII
+        description: First name of the customer.
+        tests:
+          - not_null
+      - name: last_name
+        data_type: STRING
+        tags:
+          - PII
+        description: Last name of the customer.
+        tests:
+          - not_null
+    description: >
+      This dataset provides raw customer records from our production database
+      unmasked.
+    meta:
+      asset_status: issue
+      tier: tier 1

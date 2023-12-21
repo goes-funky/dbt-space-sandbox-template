@@ -1,0 +1,48 @@
+version: 2
+
+seeds:
+  - name: raw_payments
+    config:
+      column_types:
+        id: INT
+        order_id: INT
+        payment_method: STRING
+        amount: STRING
+      tags:
+        - financial
+    columns:
+      - name: id
+        data_type: INT64
+        description: Unique identifier for each payment transaction.
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        data_type: INT64
+        description: Associates each payment with a specific order.
+        tests:
+          - relationships:
+              to: raw_orders
+              field: id
+          - not_null
+      - name: payment_method
+        data_type: STRING
+        description: Specifies the method used for the payment, such as credit card,
+          bank transfer, coupon, or gift card.
+        tests:
+          - accepted_values:
+              values:
+                - coupon
+                - bank_transfer
+                - credit_card
+                - gift_card
+          - not_null
+      - name: amount
+        data_type: STRING
+        description: The monetary value of the payment in cents, formatted as a string
+          to include decimal values and currency formatting.
+    description: This dataset provides raw transaction records from the payment
+      provider's API.
+    meta:
+      tier: tier 1
+      asset_status: draft

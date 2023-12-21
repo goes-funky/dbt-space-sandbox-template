@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: orders
+    columns:
+      - name: order_id
+        data_type: INT64
+        description: Unique identifier for each order.
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        data_type: INT64
+        description: Associates each order with a specific customer.
+        tests:
+          - not_null
+      - name: order_date
+        data_type: DATE
+        description: Date when the order was placed.
+        tests:
+          - not_null
+      - name: status
+        data_type: STRING
+        description: Current status of the order.
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - placed
+                - shipped
+                - completed
+                - return_pending
+                - returned
+      - name: credit_card_amount
+        data_type: NUMERIC
+        description: Payment amount made through credit card.
+      - name: coupon_amount
+        data_type: NUMERIC
+        description: Payment amount made using a coupon.
+      - name: bank_transfer_amount
+        data_type: NUMERIC
+        description: Payment amount made through bank transfer.
+      - name: gift_card_amount
+        data_type: NUMERIC
+        description: Payment amount made using a gift card.
+      - name: amount
+        data_type: NUMERIC
+        description: Total amount of the order.
+    description: This model consolidates order data from 'stg_orders' and payment
+      data from 'stg_payments', providing a comprehensive view of each order
+      including its payment breakdown across different methods.
+    config:
+      tags:
+        - eCommerce
+        - financial
+    meta:
+      asset_status: verified
+      tier: tier 1

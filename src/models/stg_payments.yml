@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: stg_payments
+    columns:
+      - name: payment_id
+        data_type: INT64
+        description: Unique identifier for each payment transaction.
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        data_type: INT64
+        description: Associates each payment with a specific order.
+        tests:
+          - not_null
+      - name: payment_method
+        data_type: STRING
+        description: Specifies the method used for the payment, such as credit card,
+          bank transfer, coupon, or gift card.
+        tests:
+          - accepted_values:
+              values:
+                - coupon
+                - bank_transfer
+                - credit_card
+                - gift_card
+          - not_null
+      - name: amount
+        data_type: NUMERIC
+        description: The monetary value of the payment in dollars.
+        tests: []
+    description: This table returns the payment data with amount in dollars and
+      annotated column names.
+    config:
+      tags:
+        - financial
+    meta:
+      asset_status: verified
+      tier: tier 2

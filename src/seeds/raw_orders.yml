@@ -1,0 +1,49 @@
+version: 2
+
+seeds:
+  - name: raw_orders
+    config:
+      column_types:
+        id: INT
+        user_id: INT
+        order_date: DATE
+        status: STRING
+      tags:
+        - eCommerce
+    columns:
+      - name: id
+        data_type: INT64
+        description: Unique identifier for each order.
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        data_type: INT64
+        description: Associates each order with a specific customer.
+        tests:
+          - relationships:
+              to: raw_customers
+              field: id
+          - not_null
+      - name: order_date
+        data_type: DATE
+        description: Specifies date when the order was placed.
+        tests:
+          - not_null
+      - name: status
+        data_type: STRING
+        description: The order lifecycle stage.
+        tests:
+          - accepted_values:
+              values:
+                - completed
+                - returned
+                - return_pending
+                - shipped
+                - placed
+          - not_null
+    description: This dataset provides raw customer order records from our
+      production database.
+    meta:
+      tier: tier 1
+      asset_status: verified

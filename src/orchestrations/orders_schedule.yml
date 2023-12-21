@@ -1,0 +1,8 @@
+version: 2
+
+orchestrations:
+  - name: orders_schedule
+    config:
+      enabled: true
+      command: y42 build -s +orders
+      cron: 0 9 1/1 * *
