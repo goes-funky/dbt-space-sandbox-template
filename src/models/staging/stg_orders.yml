@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: stg_orders
+    meta:
+      experts:
+        users:
+          - mail-product-support@y42.com
+      asset_status: verified
+      tier: tier 1
+    config:
+      y42:
+        apiVersion: v1
+      tags:
+        - staging
+        - core
+    columns:
+      - name: order_id
+        data_type: STRING
+        description: Unique ID for the order
+      - name: customer_id
+        data_type: STRING
+        description: Unique ID for the customer; primary key in the customers table
+      - name: fulfillment_method
+        data_type: STRING
+        description: How the order was fulfilled; either SELF_SERVICE or SERVICED by an
+          employee
+      - name: line_items
+        data_type: STRING
+        description: JSON list of items in the order. Contains product name, category,
+          and price
+      - name: service_station
+        data_type: STRING
+        description: Planet name of the service station where the order was placed
+      - name: order_status
+        data_type: STRING
+        description: "Status of the order: CANCELLED by customer, DECLINED by shop, or
+          ACCEPTED"
+        tests: []
+      - name: order_received
+        data_type: TIMESTAMP
+        description: Datetime when the order was received by the order service in CET.
+          Publication happens at 10 minute intervals.
+    description: Staging model that renames, reorders, and processes columns of the
+      orders table.
+    tests: []

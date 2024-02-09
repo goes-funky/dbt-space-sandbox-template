@@ -1,0 +1,8 @@
+version: 2
+
+orchestrations:
+  - name: all_assets_daily
+    config:
+      enabled: false
+      command: y42 build
+      cron: 0 1 1/1 * *

@@ -1,0 +1,16 @@
+version: 2
+
+alerts:
+  - name: assets_failing_alert
+    config:
+      trigger:
+        type: orchestration_status
+        orchestrations:
+          - core_assets_every_30_min
+        triggered_on:
+          - partially_ready
+          - invalid
+      destinations:
+        email:
+          email_addresses:
+            - octavian.zarzu@y42.com

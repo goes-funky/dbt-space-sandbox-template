@@ -1,0 +1,199 @@
+version: 2
+
+sources:
+  - name: raw_space_fuel_shop
+    config:
+      y42_source:
+        type: source-postgres
+        connection: Postgres Space Fuel Shop
+      y42:
+        apiVersion: v1
+    meta:
+      experts:
+        users:
+          - mail-product-support@y42.com
+      asset_status: verified
+      tier: tier 1
+    tables:
+      - name: public_payments
+        config:
+          y42_table:
+            import: payments
+            columns:
+              - payment_status
+              - amount_total
+              - id
+              - order_id
+              - payment_method
+            group: public
+            supported_sync_modes:
+              - full_refresh
+              - incremental
+            default_cursor_field: []
+            source_defined_primary_key:
+              - - id
+        columns:
+          - name: amount_total
+            data_type: INTEGER
+            description: The total order amount in euro cents
+            tests:
+              - not_null
+          - name: id
+            data_type: STRING
+            description: Unique ID for the payment. There should be only one payment per
+              order.
+            tests:
+              - not_null
+              - unique
+          - name: order_id
+            data_type: STRING
+            description: Unique ID for the order; primary key in the orders table
+            tests:
+              - not_null
+              - unique
+          - name: payment_method
+            data_type: STRING
+            description: The method used to make the payment
+            tests:
+              - not_null
+              - accepted_values:
+                  values:
+                    - CREDIT_CARD
+                    - DEBIT_CARD
+                    - CASH
+                    - GIFT_VOUCHER
+                    - REWARD_POINTS
+          - name: payment_status
+            data_type: STRING
+            description: Whether or not the payment came through properly; can be ACCEPTED,
+              DECLINED, or CANCELLED
+            tests:
+              - not_null
+              - accepted_values:
+                  values:
+                    - ACCEPTED
+                    - DECLINED
+                    - CANCELLED
+        description: "Table that records payments for every order placed at the Space
+          Fuel Shop. There should be one payment per order."
+        meta:
+          asset_status: verified
+          tier: tier 1
+          experts:
+            users:
+              - mail-product-support@y42.com
+            teams: []
+      - name: public_orders
+        config:
+          y42_table:
+            import: orders
+            columns:
+              - service_station
+              - updated_at
+              - fulfillment_method
+              - id
+              - line_items
+              - customer_id
+              - status
+            group: public
+            supported_sync_modes:
+              - full_refresh
+              - incremental
+            default_cursor_field: []
+            source_defined_primary_key:
+              - - id
+        columns:
+          - name: customer_id
+            data_type: STRING
+            description: Unique ID for the customer; primary key in the customers table
+            tests:
+              - not_null
+          - name: fulfillment_method
+            data_type: STRING
+            description: How the order was fulfilled; either SELF_SERVICE or SERVICED by an
+              employee
+            tests:
+              - not_null
+              - accepted_values:
+                  values:
+                    - SELF_SERVICE
+                    - SERVICED
+          - name: id
+            data_type: STRING
+            description: Unique ID for the order
+            tests:
+              - unique
+              - not_null
+          - name: line_items
+            data_type: STRING
+            description: JSON list of items in the order. Contains product name, category,
+              and price
+          - name: service_station
+            data_type: STRING
+            description: Planet name of the service station where the order was placed
+          - name: status
+            data_type: STRING
+            description: "Status of the order. 0 for cancelled, 1 for declined, 2 for
+              accepted"
+            tests:
+              - not_null
+              - accepted_values:
+                  values:
+                    - "0"
+                    - "1"
+                    - "2"
+          - name: updated_at
+            data_type: TIMESTAMP
+            description: Time at which the order was published to the database in CET
+        meta:
+          asset_status: verified
+          tier: tier 1
+          experts:
+            users:
+              - mail-product-support@y42.com
+            teams: []
+        description: "Table that records orders placed at the Space Fuel Shop. "
+        tests:
+          - dbt_utils.recency:
+              datepart: minute
+              field: updated_at
+              interval: 15
+      - name: public_customers
+        config:
+          y42_table:
+            import: customers
+            columns:
+              - last_name
+              - id
+              - first_name
+            group: public
+            supported_sync_modes:
+              - full_refresh
+              - incremental
+            default_cursor_field: []
+            source_defined_primary_key:
+              - - id
+        columns:
+          - name: first_name
+            data_type: STRING
+            description: First name of the customer
+          - name: id
+            data_type: STRING
+            description: "Unique ID for the customer"
+            tests:
+              - unique
+              - not_null
+          - name: last_name
+            data_type: STRING
+            description: Last name of the customer
+            tests:
+              - not_null
+        meta:
+          asset_status: verified
+          tier: tier 1
+          experts:
+            users:
+              - mail-product-support@y42.com
+            teams: []
+        description: "Table that records customer registrations of the Space Fuel Shop. "
+    description: "Postgres database hosted in Y42-demo-data Google Cloud Project."
