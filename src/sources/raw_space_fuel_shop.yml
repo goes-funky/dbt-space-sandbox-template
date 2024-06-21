@@ -19,6 +19,22 @@ sources:
         config:
           y42_table:
             import: payments
+            schema:
+              $schema: https://json-schema.org/draft-07/schema#
+              type: object
+              additionalProperties: true
+              properties:
+                amount_total:
+                  airbyte_type: integer
+                  type: number
+                id:
+                  type: string
+                order_id:
+                  type: string
+                payment_method:
+                  type: string
+                payment_status:
+                  type: string
             columns:
               - payment_status
               - amount_total
@@ -87,6 +103,27 @@ sources:
         config:
           y42_table:
             import: orders
+            schema:
+              $schema: https://json-schema.org/draft-07/schema#
+              type: object
+              additionalProperties: true
+              properties:
+                customer_id:
+                  type: string
+                fulfillment_method:
+                  type: string
+                id:
+                  type: string
+                line_items:
+                  type: string
+                service_station:
+                  type: string
+                status:
+                  type: string
+                updated_at:
+                  airbyte_type: timestamp_without_timezone
+                  format: date-time
+                  type: string
             columns:
               - service_station
               - updated_at
@@ -162,6 +199,17 @@ sources:
         config:
           y42_table:
             import: customers
+            schema:
+              $schema: https://json-schema.org/draft-07/schema#
+              type: object
+              additionalProperties: true
+              properties:
+                first_name:
+                  type: string
+                id:
+                  type: string
+                last_name:
+                  type: string
             columns:
               - last_name
               - id
