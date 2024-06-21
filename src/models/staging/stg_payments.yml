@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_payments
+    meta:
+      experts:
+        users:
+          - mail-product-support@y42.com
+      asset_status: verified
+      tier: tier 1
+    config:
+      y42:
+        apiVersion: v1
+      tags:
+        - staging
+    columns:
+      - name: payment_id
+        data_type: STRING
+        description: Unique ID for the payment. There should be only one payment per order.
+      - name: order_id
+        data_type: STRING
+        description: Unique ID for the customer; primary key in the customers table
+      - name: amount_total
+        data_type: INT64
+        description: The total order amount in euro cents
+      - name: payment_method
+        data_type: STRING
+        description: The method used to make the payment
+      - name: payment_status
+        data_type: STRING
+        description: Whether or not the payment came through properly; can be ACCEPTED,
+          DECLINED, or CANCELLED
+    description: Staging model that renames, reorders, and processes columns of the
+      payments table.

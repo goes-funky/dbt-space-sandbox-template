@@ -1,0 +1,8 @@
+version: 2
+
+orchestrations:
+  - name: core_assets_every_30_min
+    config:
+      enabled: false
+      command: y42 build -s tag:core
+      cron: 0/30 * 1/1 * *
